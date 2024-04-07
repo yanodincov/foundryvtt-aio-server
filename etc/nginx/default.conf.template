@@ -1,6 +1,6 @@
 server {
-    # Enter your fully qualified domain name or leave blank
-    server_name             ${NGINX_DOMAIN} www.${NGINX_DOMAIN};
+    listen 443 ssl;
+    server_name ${NGINX_DOMAIN} www.${NGINX_DOMAIN};
     client_max_body_size 300M;
 
     # Proxy Request to Filebrowser
@@ -33,9 +33,11 @@ server {
         proxy_pass http://foundry:30000;
     }
 
-    listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/${NGINX_DOMAIN}/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/${NGINX_DOMAIN}/privkey.pem; # managed by Certbot
-    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    # Load the certificate files.
+    ssl_certificate         /etc/letsencrypt/live/${NGINX_DOMAIN}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/${NGINX_DOMAIN}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/${NGINX_DOMAIN}/chain.pem;
+
+    # Load the Diffie-Hellman parameter.
+    ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem;
 }
