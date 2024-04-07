@@ -26,7 +26,6 @@ services:
 
   nginx:
     image: "jonasal/nginx-certbot:latest"
-    restart: unless-stopped
     environment:
       - NGINX_DOMAIN=${NGINX_DOMAIN}
       - CERTBOT_EMAIL=${NGINX_DOMAIN_EMAIL}
@@ -39,6 +38,7 @@ services:
     depends_on:
       - filebrowser
       - foundry
+    restart: always
 
   backup:
     build: 
@@ -53,6 +53,6 @@ services:
     depends_on:
       - filebrowser
       - foundry
-      - certbot
       - nginx
+    restart: always
   
