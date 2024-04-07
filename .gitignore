@@ -5,3 +5,5 @@
 data/certbot
 data/foundry
 data/letsencrypt
+
+/filebrowser/filebrowser.db

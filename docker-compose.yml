@@ -62,8 +62,8 @@ services:
       - KOFR_USERNAME=${KOFR_USERNAME}
       - KOFR_PASSWORD=${KOFR_PASSWORD}
     volumes:
-      - ./data:/backupdata/data
-      - ./etc:/backupdata/etc
+      - ./data:/foundry-aio-server/data
+      - ./etc:/foundry-aio-server/etc
     depends_on:
       - filebrowser
       - foundry

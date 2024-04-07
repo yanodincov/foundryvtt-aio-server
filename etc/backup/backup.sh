@@ -2,7 +2,7 @@
 
 # Set global variables
 compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
-foundryPath="/backupdata"
+foundryPath="/foundry-aio-server"
 backupName="backup.tar.zst"
 backupPath="/$backupName"
 diskName="kd"

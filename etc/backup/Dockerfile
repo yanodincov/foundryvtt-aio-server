@@ -1,18 +1,20 @@
 FROM ubuntu:latest
 
-# Устанавливаем необходимые пакеты
+# Install dependency
 RUN apt update && apt -y install zstd rclone gettext cron jq
 
-# Создаем необходимые директории
-RUN mkdir -p /root/.config/rclone /userscripts /data
+# Create directories
+RUN mkdir -p /root/.config/rclone /userscripts /foundry-aio-server
 
-# Копируем файлы
-COPY ./mount/backup/rclone.template.conf /root/.config/rclone/
-COPY ./mount/backup/backup.sh /userscripts/
-COPY ./mount/backup/backup-cron /etc/cron.d/
+# Copy files
+COPY ./etc/backup/rclone.template.conf /root/.config/rclone/
+COPY ./etc/backup/backup.sh /userscripts/
 COPY ./docker-compose.yml /data/
-COPY ./.env /data/
-COPY ./.env.example /data/
+COPY ./.env /foundry-aio-server/
+COPY ./.env.example /foundry-aio-server/
 
-# Запускаем cron и выводим логи
+# Add the cron job
+RUN crontab -l | { cat; echo "59 * * * * bash /userscripts/backup.sh >> /var/log/cron.log 2>&1"; } | crontab -
+
+# Run and show logs
 CMD touch /var/log/cron.log && cron && tail -f /var/log/cron.log
