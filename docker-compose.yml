@@ -25,35 +25,21 @@ services:
     restart: always
 
   nginx:
-    container_name: nginx
-    image: "nginx:latest"
+    image: "jonasal/nginx-certbot:latest"
     restart: unless-stopped
     environment:
       - NGINX_DOMAIN=${NGINX_DOMAIN}
+      - CERTBOT_EMAIL=${NGINX_DOMAIN_EMAIL}
     ports:
       - 80:80
       - 443:443 
     volumes:
-      - ./etc/nginx:/etc/nginx/templates:ro
-      - ./data/certbot/conf:/etc/letsencrypt:ro
-      - ./data/certbot/www:/var/www/certbot
+      - ./etc/nginx:/etc/nginx/templates
+      - ./data/nginx/letsencrypt:/etc/letsencrypt
     depends_on:
       - filebrowser
       - foundry
-  
-  certbot:
-    container_name: certbot
-    image: "certbot/certbot:latest"
-    command: >-
-             certonly --reinstall --webroot --webroot-path=/var/www/certbot
-             --email ${NGINX_DOMAIN_EMAIL} --agree-tos --no-eff-email
-             -d ${NGINX_DOMAIN}
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    depends_on:
-      - nginx
-    
+
   backup:
     build: 
       context: ./

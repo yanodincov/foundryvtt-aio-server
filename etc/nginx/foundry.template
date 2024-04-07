@@ -1,6 +1,6 @@
 server {
     # Enter your fully qualified domain name or leave blank
-    server_name             ${NGINX_DOMAIN};
+    server_name             ${NGINX_DOMAIN} www.${NGINX_DOMAIN};
     client_max_body_size 300M;
 
     # Proxy Request to Filebrowser
