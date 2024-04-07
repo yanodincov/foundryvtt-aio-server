@@ -3,6 +3,14 @@ server {
     server_name             ${NGINX_DOMAIN} www.${NGINX_DOMAIN};
     client_max_body_size 300M;
 
+    # Anything requesting this particular URL should be served content from
+    # Certbot's folder so the HTTP-01 ACME challenges can be completed for the
+    # HTTPS certificates.
+    location '/.well-known/acme-challenge' {
+        default_type "text/plain";
+        root /var/www/letsencrypt;
+    }
+
     # Proxy Request to Filebrowser
     location /file/browse {
         # Set proxy headers
@@ -32,6 +40,7 @@ server {
         # Make sure to set your Foundry VTT port number
         proxy_pass http://foundry:30000;
     }
+
 
     listen 443 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/${NGINX_DOMAIN}/fullchain.pem; # managed by Certbot
