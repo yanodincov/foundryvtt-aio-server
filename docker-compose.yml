@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  foundry:
+    image: "felddy/foundryvtt:release"
+    volumes:
+      - "./data/foundry:/data"
+    environment:
+      - FOUNDRY_PASSWORD=${FOUNDRY_PASSWORD}
+      - FOUNDRY_USERNAME=${FOUNDRY_USERNAME}
+      - FOUNDRY_ADMIN_KEY=${FOUNDRY_KEY}
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost:30000/ || exit 1
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  filebrowser:
+    image: "hurlenko/filebrowser:latest"
+    volumes:
+      - ./data/foundry/:/data
+      - ./etc/filebrowser:/config
+    restart: always
+
+  nginx:
+    container_name: nginx
+    image: "nginx:latest"
+    restart: unless-stopped
+    environment:
+      - DOMAIN=${NGINX_DOMAIN}
+    ports:
+      - 80:80
+      - 443:443 
+    volumes:
+      - ./etc/nginx:/etc/nginx/templates:ro
+      - ./data/letsencrypt:/etc/letsencrypt:ro
+      - ./data/certbot:/var/www/certbot
+    depends_on:
+      - filebrowser
+      - foundry
+  
+  certbot:
+    container_name: certbot
+    image: "certbot/certbot:latest"
+    command: >-
+             certonly --reinstall --webroot --webroot-path=/var/www/certbot
+             --email ${NGINX_DOMAIN_EMAIL} --agree-tos --no-eff-email
+             -d ${NGINX_DOMAIN}
+    volumes:
+      - ./data/letsencrypt:/etc/letsencrypt
+      - ./data/certbot:/var/www/certbot
+    depends_on:
+      - nginx
+    
+  backup:
+    build: 
+      context: ./
+      dockerfile: ./etc/backup/Dockerfile
+    environment:
+      - KOFR_USERNAME=${KOFR_USERNAME}
+      - KOFR_PASSWORD=${KOFR_PASSWORD}
+    volumes:
+      - ./data:/backupdata/data
+      - ./etc:/backupdata/etc
+    depends_on:
+      - filebrowser
+      - foundry
+      - certbot
+      - nginx
+  

@@ -1,0 +1,53 @@
+server {
+
+    # Enter your fully qualified domain name or leave blank
+    server_name             ${DOMAIN};
+    client_max_body_size 300M;
+
+    # Proxy Request to Filebrowser
+    location /file/browse {
+        # Set proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # These are important to support WebSockets
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        # Make sure to set your Foundry VTT port number
+        proxy_pass http://filebrowser:30001;
+    }
+
+    # Proxy Requests to Foundry VTT
+    location / {
+        # Set proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # These are important to support WebSockets
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        # Make sure to set your Foundry VTT port number
+        proxy_pass http://foundry:30000;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = ${DOMAIN}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name ${DOMAIN};
+    listen 80;
+    return 404; # managed by Certbot
+}

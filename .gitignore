@@ -1,0 +1,7 @@
+.idea
+.run
+.env
+
+data/certbot
+data/foundry
+data/letsencrypt
