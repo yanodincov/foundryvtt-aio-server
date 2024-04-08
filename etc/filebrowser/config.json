@@ -1,5 +1,4 @@
 {
-    "port": 8080,
-    "baseURL": "/file/browse",
-    "root": "/srv"
-  }
+  "port": 8080,
+  "baseURL": "/file/browse"
+}

@@ -14,7 +14,6 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
 
-        # Make sure to set your Foundry VTT port number
         proxy_pass http://filebrowser:8080;
     }
 
@@ -29,7 +28,6 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
 
-        # Make sure to set your Foundry VTT port number
         proxy_pass http://foundry:30000;
     }
 
