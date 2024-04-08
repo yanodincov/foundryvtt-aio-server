@@ -52,6 +52,7 @@ services:
     environment:
       - KOFR_USERNAME=${KOFR_USERNAME}
       - KOFR_PASSWORD=${KOFR_PASSWORD}
+      - BACKUP_START_HOUR=${BACKUP_START_HOUR}
     volumes:
       - ./data:/foundry-aio-server/data
       - ./etc:/foundry-aio-server/etc
