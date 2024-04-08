@@ -58,9 +58,9 @@ services:
     volumes:
       - ./data:/foundry-aio-server/data
       - ./etc:/foundry-aio-server/etc
-    # depends_on:
-    #   - filebrowser
-    #   - foundry
-    #   - nginx
+    depends_on:
+      - filebrowser
+      - foundry
+      - nginx
     restart: always
   
