@@ -8,7 +8,7 @@ services:
     environment:
       - FOUNDRY_PASSWORD=${FOUNDRY_PASSWORD}
       - FOUNDRY_USERNAME=${FOUNDRY_USERNAME}
-      - FOUNDRY_ADMIN_KEY=${FOUNDRY_KEY}
+      - FOUNDRY_ADMIN_KEY=${FOUNDRY_ADMIN_PASSWORD}
     restart: always
     healthcheck:
       test: curl --fail http://localhost:30000/ || exit 1
@@ -21,6 +21,7 @@ services:
     image: "hurlenko/filebrowser:latest"
     volumes:
       - ./data/foundry/:/data
+      - ./data/filebrowser:/local/db
       - ./etc/filebrowser:/config
     restart: always
 

@@ -1,6 +1,6 @@
 {
   "port": 30001,
   "log": "stdout",
-  "database": "./filebrowser.dbb",
+  "database": "/local/db/filebrowser.db",
   "baseURL": "/file/browse"
 }
