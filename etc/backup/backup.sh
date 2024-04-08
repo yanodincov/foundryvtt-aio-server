@@ -58,7 +58,7 @@ freeSpace=$(get_free_disk_space)
 log_msg "Free space on disk '$diskName': $(human_readable_size $freeSpace)"
 
 # Check if there is enough space on the disk
-if [ "$freeSpace" -lt "$fileSize" ]; then
+if [ $freeSpace -lt $fileSize ]; then
     log_msg "Insufficient space on disk '$diskName'. Initiating cleanup..."
 
     # Get a list of files sorted by date in ascending order (oldest first)
