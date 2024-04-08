@@ -19,7 +19,6 @@ services:
 
   filebrowser:
     image: "hurlenko/filebrowser:latest"
-    user: "1000:1000"
     environment:
       - FB_PASSWORD=${FILEBROWSER_PASSWORD}
       - FB_CONFIG=/local/filebrowser/config/config.json
