@@ -21,8 +21,6 @@ services:
     build: 
       context: ./
       dockerfile: ./etc/filebrowser/Dockerfile
-    environment:
-      - FILEBROWSER_PASSWORD=${FILEBROWSER_PASSWORD}
     ports:
       - 8080:8080
     volumes:
