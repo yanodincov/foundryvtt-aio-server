@@ -21,9 +21,11 @@ services:
     image: "hurlenko/filebrowser:latest"
     environment:
       - FB_PASSWORD=${FILEBROWSER_PASSWORD}
+      - FB_CONFIG=/local/filebrowser/config/config.json
     volumes:
       - ./data/foundry/:/data
       - ./data/filebrowser:/config
+      - ./etc/filebrowser:/local/filebrowser/config
     restart: always
 
   nginx:
