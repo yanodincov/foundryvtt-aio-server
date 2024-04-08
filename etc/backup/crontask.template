@@ -1,1 +1,1 @@
-47 1 * * * bash /userdata/backup.sh >> /var/log/cron.log 2>&1
+${BACKUP_START_MINUTE} ${BACKUP_START_HOUR} * * * bash /userdata/backup.sh >> /var/log/cron.log 2>&1

@@ -31,6 +31,7 @@ This project does not store or share your data with third parties, but the servi
 * ``NGINX_DOMAIN`` - Domain of the server, e.g., example.com.
 * ``NGINX_DOMAIN_EMAIL`` - Email for registering SSL certificates using Certbot.
 * ``BACKUP_START_HOUR`` - Hour of the day when the project will create and upload backups.
+* ``BACKUP_START_MINUTE`` - Minute of selected hour of the day when the project will create and upload backups.
 * ``BACKUP_KOFR_FOLDER`` - Path of the [koofr](https://koofr.eu/) disk folder to store backups.
 * ``BACKUP_TIMEZONE`` - [Ubuntu timezone](https://manpages.ubuntu.com/manpages/trusty/man3/DateTime::TimeZone::Catalog.3pm.html) for backup service.
 * ``KOFR_USERNAME`` - Username for your [koofr](https://koofr.eu/) account.
