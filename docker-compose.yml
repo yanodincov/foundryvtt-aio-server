@@ -18,15 +18,14 @@ services:
       start_period: 10s
 
   filebrowser:
-    build: 
-      context: ./
-      dockerfile: ./etc/filebrowser/Dockerfile
-    ports:
-      - 8080:8080
+    image: "filebrowser/filebrowser"
+    environment:
+      - FB_DATABASE=/db/filebrowser.db
+      - FB_PORT=8080
+      - FB_BASEURL=/file/browse
     volumes:
       - ./data/foundry/:/srv
       - ./data/filebrowser:/db
-      - ./etc/filebrowser/config:/cfg
     restart: always
 
   nginx:
