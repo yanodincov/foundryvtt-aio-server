@@ -21,8 +21,7 @@ services:
     image: "hurlenko/filebrowser:latest"
     volumes:
       - ./data/foundry/:/data
-      - ./data/filebrowser:/local/db
-      - ./etc/filebrowser:/config
+      - ./data/filebrowser:/config
     restart: always
 
   nginx:
