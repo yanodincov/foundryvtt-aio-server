@@ -34,6 +34,8 @@ This project does not store or share your data with third parties, but the servi
 * ``BACKUP_START_MINUTE`` - Minute of selected hour of the day when the project will create and upload backups.
 * ``BACKUP_KOFR_FOLDER`` - Path of the [koofr](https://koofr.eu/) disk folder to store backups.
 * ``BACKUP_TIMEZONE`` - [Ubuntu timezone](https://manpages.ubuntu.com/manpages/trusty/man3/DateTime::TimeZone::Catalog.3pm.html) for backup service.
+* ``BACKUP_BUFFER_SIZE`` - Buffer size of rclone in [copy command](https://rclone.org/commands/rclone_copy/)
+* ``BACKUP_COMPRESSION_LEVEL`` - Compression lelev of zstd compression command.
 * ``KOFR_USERNAME`` - Username for your [koofr](https://koofr.eu/) account.
 * ``KOFR_PASSWORD`` - Password for your [koofr](https://koofr.eu/) account.
 

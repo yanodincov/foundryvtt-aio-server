@@ -55,6 +55,8 @@ services:
       - BACKUP_START_MINUTE=${BACKUP_START_MINUTE}
       - BACKUP_FOLDER=${BACKUP_KOFR_FOLDER}
       - BACKUP_TIMEZONE=${BACKUP_TIMEZONE}
+      - BACKUP_BUFFER_SIZE=${BACKUP_BUFFER_SIZE}
+      - BACKUP_COMPRESSION_LEVEL=${BACKUP_COMPRESSION_LEVEL}
     volumes:
       - ./data:/foundry-aio-server/data
       - ./etc:/foundry-aio-server/etc
