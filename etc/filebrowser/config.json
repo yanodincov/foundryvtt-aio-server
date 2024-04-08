@@ -1,6 +1,5 @@
 {
     "port": 8080,
-    "database": "/db/filebrowser.db",
     "baseURL": "/file/browse",
     "root": "/srv"
   }
