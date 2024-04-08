@@ -1,0 +1,1 @@
+47 1 * * * bash /userdata/backup.sh >> /var/log/cron.log 2>&1

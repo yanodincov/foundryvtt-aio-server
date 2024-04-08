@@ -53,12 +53,13 @@ services:
       - KOFR_PASSWORD=${KOFR_PASSWORD}
       - BACKUP_START_HOUR=${BACKUP_START_HOUR}
       - BACKUP_FOLDER=${BACKUP_KOFR_FOLDER}
+      - BACKUP_TIMEZONE=${BACKUP_TIMEZONE}
     volumes:
       - ./data:/foundry-aio-server/data
       - ./etc:/foundry-aio-server/etc
-    depends_on:
-      - filebrowser
-      - foundry
-      - nginx
+    # depends_on:
+    #   - filebrowser
+    #   - foundry
+    #   - nginx
     restart: always
   

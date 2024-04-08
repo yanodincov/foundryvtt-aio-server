@@ -3,15 +3,20 @@
 # Set global variables
 compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"
+
 backupName="backup.tar.zst"
-backupPath="/$backupName"
+backupPath="/userdata/$backupName"
+
+rcloneConfigPath="/root/.config/rclone/rclone.conf"
+rcloneConfigTemplatePath="/userdata/rclone.template.conf"
+
 diskName="kd"
 diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
 bufferSize=${BACKUP_BUFFER_SIZE:-500M}
 
 # Function to print messages with formatting
 log_msg() {
-    echo -e "$1"
+    echo -e "$(date): $1"
 }
 
 # Function to format bytes into human-readable size
@@ -32,17 +37,17 @@ log_msg "Starting backup process..."
 
 # Create archive with backup using zstd compression
 log_msg "Creating backup archive $backupPath from $foundryPath"
-tar --use-compress-program="zstd -$compLvl" -cf $backupName "$foundryPath/"
+tar --use-compress-program="zstd -$compLvl" -cf $backupPath --absolute-names "$foundryPath"
 
 # Fill envs into rclone.template.conf
 log_msg "Creating rclone config from env"
-[ -e /root/.config/rclone/rclone.conf ] && rm /root/.config/rclone/rclone.conf
-envsubst < /root/.config/rclone/rclone.template.conf > /root/.config/rclone/rclone.conf.updated \
-    && mv /root/.config/rclone/rclone.conf.updated /root/.config/rclone/rclone.conf
+[ -e "$rcloneConfigPath" ] && rm "$rcloneConfigPath"
+envsubst < "$rcloneConfigTemplatePath" > "$rcloneConfigPath.updated"
+mv "$rcloneConfigPath.updated" "$rcloneConfigPath"
 
 # Create backup folder on a rclone disk
 log_msg "Creating backup folder $diskName:$diskBackupPath"
-rclone mkdir $diskName:$diskBackupPath
+rclone mkdir "$diskName:$diskBackupPath"
 
 # Get size of the backup file
 fileSize=$(stat --format=%s "$backupPath")
