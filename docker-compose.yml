@@ -18,14 +18,17 @@ services:
       start_period: 10s
 
   filebrowser:
-    image: "hurlenko/filebrowser:latest"
+    build: 
+      context: ./
+      dockerfile: ./etc/filebrowser/Dockerfile
     environment:
-      - FB_PASSWORD=${FILEBROWSER_PASSWORD}
-      - FB_CONFIG=/local/filebrowser/config/config.json
+      - FILEBROWSER_PASSWORD=${FILEBROWSER_PASSWORD}
+    ports:
+      - 8080:8080
     volumes:
-      - ./data/foundry/:/data
-      - ./data/filebrowser:/config
-      - ./etc/filebrowser:/local/filebrowser/config
+      - ./data/foundry/:/srv
+      - ./data/filebrowser:/db
+      - ./etc/filebrowser/config:/cfg
     restart: always
 
   nginx:
