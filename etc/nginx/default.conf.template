@@ -15,7 +15,7 @@ server {
         proxy_set_header Connection "Upgrade";
 
         # Make sure to set your Foundry VTT port number
-        proxy_pass http://filebrowser:30001;
+        proxy_pass http://filebrowser:8080;
     }
 
     # Proxy Requests to Foundry VTT
