@@ -19,21 +19,21 @@ This project does not store or share your data with third parties, but the servi
 
 ## File Structure
 
-* **data**: The folder where data is stored as you work.
-* **etc**: Auxiliary files for running Docker services.
+* ``data`` - The folder where data is stored as you work.
+* ``etc`` - Auxiliary files for running Docker services.
 
 ## Environments
 
-* **COMPOSE_PROJECT_NAME**: Prefix for Docker Compose containers.
-* **FOUNDRY_ADMIN_PASSWORD**: Administrator password for the Foundry application.
-* **FOUNDRY_USERNAME**: Username for your [Foundry](https://foundryvtt.com/) account.
-* **FOUNDRY_PASSWORD**: Password for your [Foundry](https://foundryvtt.com/) account.
-* **NGINX_DOMAIN**: Domain of the server, e.g., example.com.
-* **NGINX_DOMAIN_EMAIL**: Email for registering SSL certificates using Certbot.
-* **BACKUP_START_HOUR**: Hour of the day when the project will create and upload backups.
-* **BACKUP_KOFR_FOLDER**: Path of the [koofr](https://koofr.eu/) disk folder to store backups.
-* **KOFR_USERNAME**: Username for your [koofr](https://koofr.eu/) account.
-* **KOFR_PASSWORD**: Password for your [koofr](https://koofr.eu/) account.
+* ``COMPOSE_PROJECT_NAME`` - Prefix for Docker Compose containers.
+* ``FOUNDRY_ADMIN_PASSWORD`` - Administrator password for the Foundry application.
+* ``FOUNDRY_USERNAME`` - Username for your [Foundry](https://foundryvtt.com/) account.
+* ``FOUNDRY_PASSWORD`` - Password for your [Foundry](https://foundryvtt.com/) account.
+* ``NGINX_DOMAIN`` - Domain of the server, e.g., example.com.
+* ``NGINX_DOMAIN_EMAIL`` - Email for registering SSL certificates using Certbot.
+* ``BACKUP_START_HOUR`` - Hour of the day when the project will create and upload backups.
+* ``BACKUP_KOFR_FOLDER`` - Path of the [koofr](https://koofr.eu/) disk folder to store backups.
+* ``KOFR_USERNAME`` - Username for your [koofr](https://koofr.eu/) account.
+* ``KOFR_PASSWORD`` - Password for your [koofr](https://koofr.eu/) account.
 
 ## Before You Start
 
