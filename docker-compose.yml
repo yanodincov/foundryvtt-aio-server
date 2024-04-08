@@ -19,6 +19,8 @@ services:
 
   filebrowser:
     image: "hurlenko/filebrowser:latest"
+    environment:
+      - FB_PASSWORD=${FILEBROWSER_PASSWORD}
     volumes:
       - ./data/foundry/:/data
       - ./data/filebrowser:/config
