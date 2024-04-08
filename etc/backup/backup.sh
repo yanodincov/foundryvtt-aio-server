@@ -7,9 +7,6 @@ foundryPath="/foundry-aio-server"
 backupName="backup.tar.zst"
 backupPath="/userdata/$backupName"
 
-rcloneConfigPath="/root/.config/rclone/rclone.conf"
-rcloneConfigTemplatePath="/userdata/rclone.template.conf"
-
 diskName="kd"
 diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
 bufferSize=${BACKUP_BUFFER_SIZE:-500M}
@@ -38,12 +35,6 @@ log_msg "Starting backup process..."
 # Create archive with backup using zstd compression
 log_msg "Creating backup archive $backupPath from $foundryPath"
 tar --use-compress-program="zstd -$compLvl" -cf $backupPath --absolute-names "$foundryPath"
-
-# Fill envs into rclone.template.conf
-log_msg "Creating rclone config from env"
-[ -e "$rcloneConfigPath" ] && rm "$rcloneConfigPath"
-envsubst < "$rcloneConfigTemplatePath" > "$rcloneConfigPath.updated"
-mv "$rcloneConfigPath.updated" "$rcloneConfigPath"
 
 # Create backup folder on a rclone disk
 log_msg "Creating backup folder $diskName:$diskBackupPath"
