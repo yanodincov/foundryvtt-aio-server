@@ -2,8 +2,6 @@
 .run
 .env
 
-data/certbot
-data/foundry
-data/letsencrypt
+data/
 
 /filebrowser/filebrowser.db

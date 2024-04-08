@@ -13,8 +13,8 @@ COPY ./docker-compose.yml /data/
 COPY ./.env /foundry-aio-server/
 COPY ./.env.example /foundry-aio-server/
 
-# Add the cron job
-RUN crontab -l | { cat; echo "59 * * * * bash /userscripts/backup.sh >> /var/log/cron.log 2>&1"; } | crontab -
-
 # Run and show logs
-CMD touch /var/log/cron.log && cron && tail -f /var/log/cron.log
+CMD crontab -l | { cat; echo "0 ${BACKUP_START_HOUR} * * * bash /userscripts/backup.sh >> /var/log/cron.log 2>&1"; } | crontab - && \
+    touch /var/log/cron.log && \
+    cron && \
+    tail -f /var/log/cron.log
