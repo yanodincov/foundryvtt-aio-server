@@ -13,7 +13,7 @@ bufferSize=${BACKUP_BUFFER_SIZE:-500M}
 
 # Function to print messages with formatting
 log_msg() {
-    echo -e "$(date): $1"
+    echo -e $1
 }
 
 # Function to format bytes into human-readable size
