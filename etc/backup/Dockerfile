@@ -9,7 +9,7 @@ COPY ./etc/backup/rclone.template.conf /userdata
 COPY ./etc/backup/backup.sh /userdata
 COPY ./etc/backup/run.sh /userdata
 
-COPY ./.git /foundry-aio-server/
+COPY ./.git /foundry-aio-server/.git
 COPY ./.gitignore /foundry-aio-server/
 COPY ./readme.md /foundry-aio-server/
 COPY ./docker-compose.yml /foundry-aio-server/
