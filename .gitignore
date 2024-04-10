@@ -1,7 +1,6 @@
 .idea
+.DS_Store
 .run
+
 .env
-
 data/
-
-/filebrowser/filebrowser.db
