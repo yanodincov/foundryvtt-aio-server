@@ -28,7 +28,7 @@ This project does not store or share your data with third parties, but the servi
 * ``FOUNDRY_ADMIN_PASSWORD`` - Administrator password for the Foundry application.
 * ``FOUNDRY_USERNAME`` - Username for your [Foundry](https://foundryvtt.com/) account.
 * ``FOUNDRY_PASSWORD`` - Password for your [Foundry](https://foundryvtt.com/) account.
-* ``FOUNDRY_INIT_CONFIG`` - "Enable auto-fill settings from your [Foundry](https://foundryvtt.com/) account. It's recommended for the first run, but after initial use, it's highly recommended to disable the feature, as Foundry settings will reset after each restart.
+* ``FOUNDRY_STORE_CONFIG`` - Save settings changed in the web interface, but disable auto-fill settings from your Foundry](https://foundryvtt.com/) account. It's recommended to set it to ``false`` for the first run, but after initial use, it's highly recommended to set it to ``true`` to save settings changes.
 * ``NGINX_DOMAIN`` - Domain of the server, e.g., example.com.
 * ``NGINX_DOMAIN_EMAIL`` - Email for registering SSL certificates using Certbot.
 * ``BACKUP_START_HOUR`` - Hour of the day when the project will create and upload backups.
@@ -65,4 +65,4 @@ This project does not store or share your data with third parties, but the servi
     docker-compose up -d
     ```
 
-4. After successfully building and running Foundry, it's highly recommended to disable the ``FOUNDRY_INIT_CONFIG`` flag to preserve the configured Foundry settings via the web interface after restarting the service.
+4. After successfully building and running Foundry, it's highly recommended to enable the ``FOUNDRY_STORE_CONFIG`` flag to preserve the configured Foundry settings via the web interface after restarting the service.

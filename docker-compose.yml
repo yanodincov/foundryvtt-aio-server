@@ -9,7 +9,7 @@ services:
       - FOUNDRY_PASSWORD=${FOUNDRY_PASSWORD}
       - FOUNDRY_USERNAME=${FOUNDRY_USERNAME}
       - FOUNDRY_ADMIN_KEY=${FOUNDRY_ADMIN_PASSWORD}
-      - CONTAINER_PRESERVE_CONFIG=${FOUNDRY_INIT_CONFIG}
+      - CONTAINER_PRESERVE_CONFIG=${FOUNDRY_STORE_CONFIG}
     restart: always
     healthcheck:
       test: curl --fail http://localhost:30000/ || exit 1
