@@ -53,12 +53,12 @@ if [ $freeSpace -lt $fileSize ]; then
     log_msg "Insufficient space on disk '$diskName'. Initiating cleanup..."
 
     # Get a list of files sorted by date in ascending order (oldest first)
-    filesToDelete=$(rclone lsjson "$diskBackupPath" | jq -r 'sort_by(.Name) | .[].Path')
+    filesToDelete=$(rclone lsjson "$diskName:$diskBackupPath" | jq -r 'sort_by(.Name) | .[].Path')
     log_msg "Files will be deleted in the following order until enough space is freed up: $filesToDelete"
 
     # Delete files starting from the oldest until enough space is available
     for fileToDelete in $filesToDelete; do
-        rclone deletefile "$diskBackupPath/$fileToDelete"
+        rclone deletefile "$diskName:$diskBackupPath/$fileToDelete"
         log_msg "Deleted file: $fileToDelete"
 
         # Update free space information
