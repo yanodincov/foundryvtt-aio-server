@@ -5,11 +5,18 @@ compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"
 
 backupName="backup.tar.zst"
-backupPath="/userdata/$backupName"
+backupPath="/root/$backupName"
 
 diskName="kd"
-diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
-bufferSize=${BACKUP_BUFFER_SIZE:-500M}
+diskBackupPath=${BACKUP_FOLDER}
+if [ -z "$diskBackupPath" ]; then
+    diskBackupPath="/foundry/backup"
+fi
+
+bufferSize=${BACKUP_BUFFER_SIZE}
+if [ -z "$bufferSize" ]; then
+    bufferSize="512M"
+fi
 
 # Function to print messages with formatting
 log_msg() {

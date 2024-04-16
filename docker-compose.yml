@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   foundry:
     image: "felddy/foundryvtt:release"
@@ -60,9 +58,10 @@ services:
       - BACKUP_COMPRESSION_LEVEL=${BACKUP_COMPRESSION_LEVEL}
     volumes:
       - ./../foundry-aio-server:/foundry-aio-server
-    depends_on:
-      - filebrowser
-      - foundry
-      - nginx
+      - ./etc/backup:/userdata
+    # depends_on:
+    #   - filebrowser
+    #   - foundry
+    #   - nginx
     restart: always
   
