@@ -1,6 +1,6 @@
 services:
   foundry:
-    image: felddy/foundryvtt:${FOUNDRY_IMAGE_VERSION:release}
+    image: felddy/foundryvtt:${FOUNDRY_IMAGE_VERSION}
     volumes:
       - "./data/foundry:/data"
     environment:
