@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ${BACKUP_ENABLED:-false}; then
+if ! ${BACKUP_ENABLED:-false}; then
     echo "Backup is disabled. Skipping backup process."
     exit 0
 fi
