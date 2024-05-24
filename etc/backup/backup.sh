@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if ${BACKUP_ENABLED:-false}; then
+    echo "Backup is disabled. Skipping backup process."
+    exit 0
+fi
+
 # Set global variables
 compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"

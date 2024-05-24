@@ -1,6 +1,6 @@
 services:
   foundry:
-    image: "felddy/foundryvtt:release"
+    image: "felddy/foundryvtt:${FOUNDRY_IMAGE_VERSION:release}"
     volumes:
       - "./data/foundry:/data"
     environment:
@@ -48,6 +48,7 @@ services:
       context: ./
       dockerfile: ./etc/backup/Dockerfile
     environment:
+      - BACKUP_ENABLED=${BACKUP_ENABLED}
       - KOFR_USERNAME=${KOFR_USERNAME}
       - KOFR_PASSWORD=${KOFR_PASSWORD}
       - BACKUP_START_HOUR=${BACKUP_START_HOUR}
@@ -59,9 +60,9 @@ services:
     volumes:
       - ./../foundry-aio-server:/foundry-aio-server
       - ./etc/backup:/userdata
-    # depends_on:
-    #   - filebrowser
-    #   - foundry
-    #   - nginx
+    depends_on:
+       - filebrowser
+       - foundry
+       - nginx
     restart: always
   
