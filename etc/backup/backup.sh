@@ -52,6 +52,23 @@ tar --use-compress-program="zstd -$compLvl" -cf $backupPath --absolute-names "$f
 log_msg "Creating backup folder $diskName:$diskBackupPath"
 rclone mkdir "$diskName:$diskBackupPath"
 
+# Calculate MD5 hash of the created backup
+log_msg "Calculating MD5 hash of the created backup..."
+backupMD5=$(md5sum "$backupPath" | awk '{print $1}')
+log_msg "MD5 hash of the created backup: $backupMD5"
+
+# Get MD5 hash of the last backup from kd
+log_msg "Getting MD5 hash of the last backup from kd..."
+lastBackup=$(rclone ls "$diskName:$diskBackupPath" | grep -Eo '[0-9]{14}-backup.tar.zst' | sort -n | tail -n 1)
+lastBackupMD5=$(rclone md5sum "$diskName:$diskBackupPath/$lastBackup" | awk '{print $1}')
+log_msg "MD5 hash of the last backup from kd: $lastBackupMD5"
+
+# Compare MD5 hashes
+if [ "$backupMD5" == "$lastBackupMD5" ]; then
+    log_msg "MD5 hashes match. Backup process completed successfully."
+    exit 0
+fi
+
 # Get size of the backup file
 fileSize=$(stat --format=%s "$backupPath")
 log_msg "Backup file size: $(human_readable_size $fileSize)"
