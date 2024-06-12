@@ -58,7 +58,7 @@ services:
       - BACKUP_BUFFER_SIZE=${BACKUP_BUFFER_SIZE}
       - BACKUP_COMPRESSION_LEVEL=${BACKUP_COMPRESSION_LEVEL}
     volumes:
-      - ./../foundry-aio-server:/foundry-aio-server
+      - ${PWD}:/foundry-aio-server
       - ./etc/backup:/userdata
     depends_on:
        - filebrowser
