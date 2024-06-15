@@ -112,6 +112,10 @@ fi
 # Start upload of backup file to the designated folder
 log_msg "Starting upload of $backupPath to $diskName:$diskBackupPath"
 rclone copy --buffer-size "$bufferSize" "$backupPath" "$diskName:$diskBackupPath"
+if [ $? -ne 0 ]; then
+    log_msg "rclone copy failed. Exiting."
+    exit 1
+fi
 
 # Cleanup local backup file
 log_msg "Deleting $backupPath"
