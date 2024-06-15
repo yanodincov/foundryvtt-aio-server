@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ! ${BACKUP_ENABLED:-false}; then
+if [[ "${BACKUP_ENABLED:-false}" != true ]]; then
     echo "Backup is disabled. Skipping backup process."
     exit 0
 fi
@@ -25,12 +25,12 @@ fi
 
 # Function to print messages with formatting
 log_msg() {
-    echo -e $1
+    echo -e "$1"
 }
 
 # Function to format bytes into human-readable size
 human_readable_size() {
-    echo $(numfmt --to=iec-i --suffix=B --padding=7 $1)
+    echo $(numfmt --to=iec-i --suffix=B --padding=7 "$1")
 }
 
 # Function to get number of free bytes on a disk
@@ -46,7 +46,7 @@ log_msg "Starting backup process..."
 
 # Create archive with backup using zstd compression
 log_msg "Creating backup archive $backupPath from $foundryPath"
-tar --use-compress-program="zstd -$compLvl" -cf $backupPath --absolute-names "$foundryPath"
+tar --use-compress-program="zstd -$compLvl" -cf "$backupPath" --absolute-names "$foundryPath"
 
 # Create backup folder on a rclone disk
 log_msg "Creating backup folder $diskName:$diskBackupPath"
@@ -71,14 +71,14 @@ fi
 
 # Get size of the backup file
 fileSize=$(stat --format=%s "$backupPath")
-log_msg "Backup file size: $(human_readable_size $fileSize)"
+log_msg "Backup file size: $(human_readable_size "$fileSize")"
 
 # Get disk information
 freeSpace=$(get_free_disk_space)
-log_msg "Free space on disk '$diskName': $(human_readable_size $freeSpace)"
+log_msg "Free space on disk '$diskName': $(human_readable_size "$freeSpace")"
 
 # Check if there is enough space on the disk
-if [ $freeSpace -lt $fileSize ]; then
+if [ "$freeSpace" -lt "$fileSize" ]; then
     log_msg "Insufficient space on disk '$diskName'. Initiating cleanup..."
 
     # Get a list of files sorted by date in ascending order (oldest first)
@@ -93,7 +93,7 @@ if [ $freeSpace -lt $fileSize ]; then
         # Update free space information
         freeSpace=$(get_free_disk_space)
 
-        log_msg "Free space on disk '$diskName': $(human_readable_size $freeSpace)"
+        log_msg "Free space on disk '$diskName': $(human_readable_size "$freeSpace")"
         if [ "$freeSpace" -ge "$fileSize" ]; then
             log_msg "Sufficient space freed up. Continuing with the backup process."
             break
@@ -110,15 +110,15 @@ if [ $freeSpace -lt $fileSize ]; then
 fi
 
 # Start upload of backup file to the designated folder
-log_msg "Starting upload of $backupPath to $diskBackupPath"
-rclone copy --buffer-size $bufferSize "$backupPath" "$diskBackupPath"
+log_msg "Starting upload of $backupPath to $diskName:$diskBackupPath"
+rclone copy --buffer-size "$bufferSize" "$backupPath" "$diskName:$diskBackupPath"
 
 # Cleanup local backup file
 log_msg "Deleting $backupPath"
 rm "$backupPath"
 
 # Rename backup file on the remote disk with timestamp
-diskbackupPath="$diskBackupPath/$(date +"%Y%m%d%H%M%S")-$backupName"
-log_msg "Renaming $diskBackupPath/$backupName to $diskbackupPath"
-rclone moveto "$diskBackupPath/$backupName" "$diskName:$diskbackupPath"
-log_msg "Backup $diskName:$diskbackupPath saved successfully"
+diskbackupFilePath="$diskBackupPath/$(date +"%Y%m%d%H%M%S")-$backupName"
+log_msg "Renaming $diskName:$diskBackupPath/$backupName to $diskbackupFilePath"
+rclone moveto "$diskName:$diskBackupPath/$backupName" "$diskName:$diskbackupFilePath"
+log_msg "Backup $diskName:$diskbackupFilePath saved successfully"
