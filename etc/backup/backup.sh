@@ -113,7 +113,7 @@ fi
 log_msg "Starting upload of $backupPath to $diskName:$diskBackupPath"
 rclone copy --buffer-size "$bufferSize" "$backupPath" "$diskName:$diskBackupPath"
 if [ $? -ne 0 ]; then
-    log_msg "rclone copy failed. Exiting."
+    log_msg "Command \"rclone copy --buffer-size $bufferSize $backupPath $diskName:$diskBackupPath\" failed. Exiting."
     exit 1
 fi
 
