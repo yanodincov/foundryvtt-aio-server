@@ -27,11 +27,13 @@ This project does not store or share your data with third parties, but the servi
 ## Environments
 
 * ``COMPOSE_PROJECT_NAME`` - Prefix for Docker Compose containers.
+* ``FOUNDRY_IMAGE_VERSION`` - Version of [felddy/foundryvtt](https://github.com/felddy/foundryvtt-docker) image.
 * ``FOUNDRY_ADMIN_PASSWORD`` - Administrator password for the Foundry application.
 * ``FOUNDRY_USERNAME`` - Username for your [FoundryVTT](https://foundryvtt.com/) account.
 * ``FOUNDRY_PASSWORD`` - Password for your [FoundryVTT](https://foundryvtt.com/) account.
 * ``FOUNDRY_STORE_CONFIG`` - Save settings changed in the web interface, but disable auto-fill settings from your Foundry](https://foundryvtt.com/) account. It's recommended to set it to ``false`` for the first run, but after initial use, it's highly recommended to set it to ``true`` to save settings changes.
 * ``NGINX_DOMAIN`` - Domain of the server, e.g., example.com.
+* ``BACKUP_ENABLED`` - Flag for enabled bakcup process. By default is ``false``.
 * ``NGINX_DOMAIN_EMAIL`` - Email for registering SSL certificates using Certbot.
 * ``BACKUP_START_HOUR`` - Hour of the day when the project will create and upload backups.
 * ``BACKUP_START_MINUTE`` - Minute of selected hour of the day when the project will create and upload backups.

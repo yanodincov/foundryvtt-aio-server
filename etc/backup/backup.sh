@@ -1,27 +1,7 @@
 #!/bin/bash
 
-if [[ "${BACKUP_ENABLED:-false}" != true ]]; then
-    echo "Backup is disabled. Skipping backup process."
-    exit 0
-fi
 
-# Set global variables
-compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
-foundryPath="/foundry-aio-server"
 
-backupName="backup.tar.zst"
-backupPath="/root/$backupName"
-
-diskName="kd"
-diskBackupPath=${BACKUP_FOLDER}
-if [ -z "$diskBackupPath" ]; then
-    diskBackupPath="/foundry/backup"
-fi
-
-bufferSize=${BACKUP_BUFFER_SIZE}
-if [ -z "$bufferSize" ]; then
-    bufferSize="512M"
-fi
 
 # Function to print messages with formatting
 log_msg() {
@@ -37,6 +17,31 @@ human_readable_size() {
 get_free_disk_space() {
     echo $(rclone about "$diskName:" --json | jq -r .free)
 }
+
+# Load environment variables into local variables and log them
+BACKUP_ENABLED=${BACKUP_ENABLED:-false}
+compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
+foundryPath="/foundry-aio-server"
+backupName="backup.tar.zst"
+backupPath="/root/$backupName"
+diskName="kd"
+diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
+bufferSize=${BACKUP_BUFFER_SIZE:-"512M"}
+
+log_msg "Environment variables:
+BACKUP_ENABLED=$BACKUP_ENABLED
+BACKUP_COMPRESSION_LEVEL=$compLvl
+foundryPath=$foundryPath
+backupName=$backupName
+backupPath=$backupPath
+diskName=$diskName
+diskBackupPath=$diskBackupPath
+bufferSize=$bufferSize"
+
+if [[ "${BACKUP_ENABLED:-false}" != "true" ]]; then
+    log_msg "Backup is disabled. Skipping backup process."
+    exit 0
+fi
 
 # Main backup process
 log_msg "Starting backup process..."
