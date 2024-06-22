@@ -1,11 +1,8 @@
 #!/bin/bash
 
-
-
-
-# Function to print messages with formatting
+# Function to print messages with formatting and timestamp
 log_msg() {
-    echo -e "$1"
+    echo -e "$(date +"%Y-%m-%d %H:%M:%S") - $1"
 }
 
 # Function to format bytes into human-readable size
