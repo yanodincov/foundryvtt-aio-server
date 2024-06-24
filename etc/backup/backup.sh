@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Export all environment variables from the docker container's init process
 for variable_value in $(cat /proc/1/environ | sed 's/\x00/\n/g'); do
     export $variable_value
 done
