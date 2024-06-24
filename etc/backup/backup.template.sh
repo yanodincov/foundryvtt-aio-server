@@ -1,5 +1,9 @@
 #!/bin/bash
 
+for variable_value in $(cat /proc/1/environ | sed 's/\x00/\n/g'); do
+    export $variable_value
+done
+
 # Function to print messages with formatting and timestamp
 log_msg() {
     echo -e "$(date +"%Y-%m-%d %H:%M:%S") - $1"

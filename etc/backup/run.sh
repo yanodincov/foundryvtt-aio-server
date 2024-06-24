@@ -4,6 +4,7 @@ dpkg-reconfigure -f noninteractive tzdata
 envsubst < /userdata/rclone.template.conf > /root/.config/rclone/rclone.conf
 
 envsubst < /userdata/crontask.template > /etc/cron.d/backup
+envsubst < /userdata/backup.template.sh > /userdata/backup.sh
 crontab /etc/cron.d/backup 
 chmod 0644 /etc/cron.d/backup
 cron
