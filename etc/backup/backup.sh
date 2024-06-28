@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Export all environment variables from the docker container's init process
-for variable_value in $(cat /proc/1/environ | sed 's/\x00/\n/g'); do
-    export $variable_value
-done
-
 # Function to print messages with formatting and timestamp
 log_msg() {
     echo -e "$(date +"%Y-%m-%d %H:%M:%S") - $1"
@@ -21,7 +16,7 @@ get_free_disk_space() {
 }
 
 # Load environment variables into local variables and log them
-BACKUP_ENABLED=${BACKUP_ENABLED:-false}
+backupEnabled=${BACKUP_ENABLED:-false}
 compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"
 backupName="backup.tar.zst"
@@ -30,17 +25,20 @@ diskName="kd"
 diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
 bufferSize=${BACKUP_BUFFER_SIZE:-"512M"}
 
-log_msg "Environment variables:
-BACKUP_ENABLED=$BACKUP_ENABLED
-BACKUP_COMPRESSION_LEVEL=$compLvl
-foundryPath=$foundryPath
-backupName=$backupName
-backupPath=$backupPath
-diskName=$diskName
-diskBackupPath=$diskBackupPath
-bufferSize=$bufferSize"
+log_msg "{
+    "script_params": {
+        "backupEnabled": "$backupEnabled",
+        "compLvl": "$compLvl",
+        "foundryPath": "$foundryPath",
+        "backupName": "$backupName",
+        "backupPath": "$backupPath",
+        "diskName": "$diskName",
+        "diskBackupPath": "$diskBackupPath",
+        "bufferSize": "$bufferSize"
+    }
+}"
 
-if [[ "${BACKUP_ENABLED:-false}" != "true" ]]; then
+if [[ "${backupEnabled:-false}" != "true" ]]; then
     log_msg "Backup is disabled. Skipping backup process."
     exit 0
 fi

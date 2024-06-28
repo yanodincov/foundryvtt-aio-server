@@ -1,1 +1,6 @@
-${BACKUP_START_MINUTE} ${BACKUP_START_HOUR} * * * bash /userdata/backup.sh >> /var/log/cron.log 2>&1
+BACKUP_ENABLED=${BACKUP_ENABLED:-false}
+BACKUP_COMPRESSION_LEVEL=${BACKUP_COMPRESSION_LEVEL:-10}
+BACKUP_FOLDER=${BACKUP_FOLDER:-"/foundry/backup"}
+BACKUP_BUFFER_SIZE=${BACKUP_BUFFER_SIZE:-"512M"}
+
+${BACKUP_START_MINUTE} ${BACKUP_START_HOUR} * * * /userdata/backup.sh >> /var/log/cron.log 2>&1
