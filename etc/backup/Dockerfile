@@ -1,6 +1,8 @@
 FROM ubuntu:latest
 
-RUN apt update && apt -y install zstd rclone gettext cron jq tzdata && \
+RUN apt update && apt -y install zstd rclone cron jq tzdata && \
+    curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst \
+    sudo mv envsubst /usr/local/bin \
     mkdir -p /root/.config/rclone /userdata /foundry-aio-server && \
     touch /var/log/cron.log
 
