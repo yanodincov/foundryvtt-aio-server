@@ -8,6 +8,5 @@ COPY ./etc/backup/crontask.template /userdata
 COPY ./etc/backup/rclone.template.conf /userdata
 COPY ./etc/backup/backup.sh /userdata
 COPY ./etc/backup/run.sh /userdata
-RUN chmod +x /userdata/backup.sh
 
 ENTRYPOINT [ "bash", "/userdata/run.sh" ]
