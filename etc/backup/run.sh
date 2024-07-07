@@ -3,7 +3,7 @@ ln -fs "/usr/share/zoneinfo/${BACKUP_TIMEZONE}" /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 
 rclone_ini_config=$(echo "${RCLONE_JSON_CONFIG}" | jq -r 'to_entries[] | "\(.key) = \(.value | tostring)"')
-echo "[backupstorage]\\n$rclone_ini_config" > /root/.config/rclone/rclone.conf
+echo -e "[backupstorage]\n$rclone_ini_config" > /root/.config/rclone/rclone.conf
 echo "Rclone config:"
 cat /root/.config/rclone/rclone.conf
 
