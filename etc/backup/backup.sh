@@ -21,8 +21,8 @@ compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"
 backupName="backup.tar.zst"
 backupPath="/root/$backupName"
-diskName="kd"
-diskBackupPath=${BACKUP_FOLDER:-"/foundry/backup"}
+diskName="backupstorage"
+diskBackupPath=${BACKUP_STORAGE_FOLDER:-"/foundry/backup"}
 bufferSize=${BACKUP_BUFFER_SIZE:-"512M"}
 
 log_msg "{
@@ -62,11 +62,11 @@ log_msg "Calculating MD5 hash of the created backup..."
 backupMD5=$(md5sum "$backupPath" | awk '{print $1}')
 log_msg "MD5 hash of the created backup: $backupMD5"
 
-# Get MD5 hash of the last backup from kd
-log_msg "Getting MD5 hash of the last backup from kd..."
+# Get MD5 hash of the last backup from backupstorage
+log_msg "Getting MD5 hash of the last backup from storage..."
 lastBackup=$(rclone ls "$diskName:$diskBackupPath" | grep -Eo '[0-9]{14}-backup.tar.zst' | sort -n | tail -n 1)
 lastBackupMD5=$(rclone md5sum "$diskName:$diskBackupPath/$lastBackup" | awk '{print $1}')
-log_msg "MD5 hash of the last backup from kd: $lastBackupMD5"
+log_msg "MD5 hash of the last backup from storage: $lastBackupMD5"
 
 # Compare MD5 hashes
 if [ "$backupMD5" == "$lastBackupMD5" ]; then

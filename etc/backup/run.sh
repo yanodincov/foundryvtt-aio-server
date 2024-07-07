@@ -1,7 +1,10 @@
 ln -fs "/usr/share/zoneinfo/${BACKUP_TIMEZONE}" /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 
-envsubst < /userdata/rclone.template.conf > /root/.config/rclone/rclone.conf
+rclone_config=$(jq -r 'to_entries | map("[\(.key)]\n\(.value | to_entries | map("\(.key) = \(.value | tostring)") | .[] ) | .[]' ${RCLONE_JSON_CONFIG})
+# Вывод на экран (можно закомментировать, если не нужен)
+echo "Created rclon config from json:\n$rclone_config";
+echo "$rclone_config" > /root/.config/rclone/rclone.conf
 
 envsubst < /userdata/crontask.template > /etc/cron.d/backup
 crontab /etc/cron.d/backup 
