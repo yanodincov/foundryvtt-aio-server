@@ -7,7 +7,6 @@ RUN apt update && apt -y install zstd rclone cron jq tzdata curl && \
     touch /var/log/cron.log
 
 COPY ./etc/backup/crontask.template /userdata
-COPY ./etc/backup/rclone.template.conf /userdata
 COPY ./etc/backup/backup.sh /userdata
 COPY ./etc/backup/run.sh /userdata
 
