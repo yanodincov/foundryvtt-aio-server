@@ -49,14 +49,13 @@ services:
       dockerfile: ./etc/backup/Dockerfile
     environment:
       - BACKUP_ENABLED=${BACKUP_ENABLED}
-      - KOFR_USERNAME=${KOFR_USERNAME}
-      - KOFR_PASSWORD=${KOFR_PASSWORD}
       - BACKUP_START_HOUR=${BACKUP_START_HOUR}
       - BACKUP_START_MINUTE=${BACKUP_START_MINUTE}
       - BACKUP_FOLDER=${BACKUP_KOFR_FOLDER}
       - BACKUP_TIMEZONE=${BACKUP_TIMEZONE}
       - BACKUP_BUFFER_SIZE=${BACKUP_BUFFER_SIZE}
       - BACKUP_COMPRESSION_LEVEL=${BACKUP_COMPRESSION_LEVEL}
+      - RCLONE_JSON_CONFIG=${RCLONE_JSON_CONFIG}
     volumes:
       - ${PWD}:/foundry-aio-server
       - ./etc/backup:/userdata
