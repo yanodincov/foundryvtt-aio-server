@@ -7,12 +7,12 @@ log_msg() {
 
 # Function to format bytes into human-readable size
 human_readable_size() {
-    echo $(numfmt --to=iec-i --suffix=B --padding=7 "$1")
+    echo $(numfmt --to=iec --padding=7 "$1")
 }
 
 # Function to convert size with suffix (e.g., 10G) to bytes
 size_to_bytes() {
-    echo $(numfmt --from=iec-i --suffix=B "$1")
+    echo $(numfmt --from=iec "$1")
 }
 
 # Function to get the total size of backups in a folder
