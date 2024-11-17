@@ -41,6 +41,7 @@ This project does not store or share your data with third parties, but the servi
 * ``BACKUP_TIMEZONE`` - [Ubuntu timezone](https://manpages.ubuntu.com/manpages/trusty/man3/DateTime::TimeZone::Catalog.3pm.html) for backup service.
 * ``BACKUP_BUFFER_SIZE`` - Buffer size of rclone in [copy command](https://rclone.org/commands/rclone_copy/)
 * ``BACKUP_COMPRESSION_LEVEL`` - Compression level of zstd compression command.
+* ``BACKUP_DISK_LIMIT`` - Limit of memory size which will be used for storing backup files.
 * ``RCLONE_JSON_CONFIG`` - Json config for the rclone. You can make it via a [script](scripts/json-rclone-config.sh) from your local rclone config.
 
 ## Before You Start

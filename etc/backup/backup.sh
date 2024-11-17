@@ -10,12 +10,27 @@ human_readable_size() {
     echo $(numfmt --to=iec-i --suffix=B --padding=7 "$1")
 }
 
-# Function to get number of free bytes on a disk
+# Function to convert size with suffix (e.g., 10G) to bytes
+size_to_bytes() {
+    echo $(numfmt --from=iec-i --suffix=B "$1")
+}
+
+# Function to get the total size of backups in a folder
+get_total_backup_size() {
+    echo $(rclone size "$diskName:$diskBackupPath" --json | jq -r .bytes)
+}
+
+# Function to get the current free space on the disk
 get_free_disk_space() {
     echo $(rclone about "$diskName:" --json | jq -r .free)
 }
 
-# Load environment variables into local variables and log them
+# Function to get the total size of the disk
+get_total_disk_size() {
+    echo $(rclone about "$diskName:" --json | jq -r .total)
+}
+
+# Load environment variables
 backupEnabled=${BACKUP_ENABLED:-false}
 compLvl=${BACKUP_COMPRESSION_LEVEL:-10}
 foundryPath="/foundry-aio-server"
@@ -24,17 +39,34 @@ backupPath="/root/$backupName"
 diskName="backupstorage"
 diskBackupPath=${BACKUP_STORAGE_FOLDER:-"/foundry/backup"}
 bufferSize=${BACKUP_BUFFER_SIZE:-"512M"}
+backupsDiskLimit=${BACKUP_DISK_LIMIT:-"1P"} # Default to a large value
+
+# Convert size limit to bytes
+backupsDiskLimitBytes=$(size_to_bytes "$backupsDiskLimit")
+
+# Get the total disk size
+totalDiskSize=$(get_total_disk_size)
+log_msg "Total disk size: $(human_readable_size "$totalDiskSize")"
+
+# Adjust backupsDiskLimitBytes if it exceeds the total disk size
+if [ "$backupsDiskLimitBytes" -gt "$totalDiskSize" ]; then
+    log_msg "Provided backup size limit ($backupsDiskLimit) exceeds total disk size. Adjusting limit to disk size."
+    backupsDiskLimitBytes=$totalDiskSize
+    log_msg "New backup size limit: $(human_readable_size "$backupsDiskLimitBytes")"
+    backupsDiskLimit=$(human_readable_size "$backupsDiskLimitBytes")
+fi
 
 log_msg "{
-    "script_params": {
-        "backupEnabled": "$backupEnabled",
-        "compLvl": "$compLvl",
-        "foundryPath": "$foundryPath",
-        "backupName": "$backupName",
-        "backupPath": "$backupPath",
-        "diskName": "$diskName",
-        "diskBackupPath": "$diskBackupPath",
-        "bufferSize": "$bufferSize"
+    \"script_params\": {
+        \"backupEnabled\": \"$backupEnabled\",
+        \"compLvl\": \"$compLvl\",
+        \"foundryPath\": \"$foundryPath\",
+        \"backupName\": \"$backupName\",
+        \"backupPath\": \"$backupPath\",
+        \"diskName\": \"$diskName\",
+        \"diskBackupPath\": \"$diskBackupPath\",
+        \"bufferSize\": \"$bufferSize\",
+        \"backupsDiskLimit\": \"$backupsDiskLimit\"
     }
 }"
 
@@ -53,65 +85,47 @@ log_msg "Starting backup process..."
 log_msg "Creating backup archive $backupPath from $foundryPath"
 tar --use-compress-program="zstd -$compLvl" -cf "$backupPath" --absolute-names "$foundryPath"
 
-# Create backup folder on a rclone disk
-log_msg "Creating backup folder $diskName:$diskBackupPath"
-rclone mkdir "$diskName:$diskBackupPath"
-
 # Calculate MD5 hash of the created backup
 log_msg "Calculating MD5 hash of the created backup..."
 backupMD5=$(md5sum "$backupPath" | awk '{print $1}')
 log_msg "MD5 hash of the created backup: $backupMD5"
 
-# Get MD5 hash of the last backup from backupstorage
-log_msg "Getting MD5 hash of the last backup from storage..."
-lastBackup=$(rclone ls "$diskName:$diskBackupPath" | grep -Eo '[0-9]{14}-backup.tar.zst' | sort -n | tail -n 1)
-lastBackupMD5=$(rclone md5sum "$diskName:$diskBackupPath/$lastBackup" | awk '{print $1}')
-log_msg "MD5 hash of the last backup from storage: $lastBackupMD5"
-
-# Compare MD5 hashes
-if [ "$backupMD5" == "$lastBackupMD5" ]; then
-    log_msg "MD5 hashes match. Backup process completed successfully."
-    exit 0
-fi
-
 # Get size of the backup file
 fileSize=$(stat --format=%s "$backupPath")
 log_msg "Backup file size: $(human_readable_size "$fileSize")"
 
-# Get disk information
-freeSpace=$(get_free_disk_space)
-log_msg "Free space on disk '$diskName': $(human_readable_size "$freeSpace")"
+# Check total size of backups on remote
+totalBackupSize=$(get_total_backup_size)
+log_msg "Current total size of backups: $(human_readable_size "$totalBackupSize")"
 
-# Check if there is enough space on the disk
-if [ "$freeSpace" -lt "$fileSize" ]; then
-    log_msg "Insufficient space on disk '$diskName'. Initiating cleanup..."
+# Check if adding the new backup exceeds the size limit
+if [ $(($totalBackupSize + $fileSize)) -gt $backupsDiskLimitBytes ]; then
+    log_msg "Total backup size exceeds limit of $(human_readable_size "$backupsDiskLimitBytes"). Initiating cleanup..."
 
     # Get a list of files sorted by date in ascending order (oldest first)
-    filesToDelete=$(rclone lsjson "$diskName:$diskBackupPath" | jq -r 'sort_by(.Name) | .[].Path')
+    filesToDelete=$(rclone lsjson "$diskName:$diskBackupPath" | jq -r 'sort_by(.ModTime) | .[].Path')
     log_msg "Files will be deleted in the following order until enough space is freed up: $filesToDelete"
 
-    # Delete files starting from the oldest until enough space is available
+    # Delete files starting from the oldest until the total size is within limit
     for fileToDelete in $filesToDelete; do
         rclone deletefile "$diskName:$diskBackupPath/$fileToDelete"
         log_msg "Deleted file: $fileToDelete"
 
-        # Update free space information
-        freeSpace=$(get_free_disk_space)
+        # Update total backup size
+        totalBackupSize=$(get_total_backup_size)
+        log_msg "Updated total size of backups: $(human_readable_size "$totalBackupSize")"
 
-        log_msg "Free space on disk '$diskName': $(human_readable_size "$freeSpace")"
-        if [ "$freeSpace" -ge "$fileSize" ]; then
-            log_msg "Sufficient space freed up. Continuing with the backup process."
+        if [ $(($totalBackupSize + $fileSize)) -le $backupsDiskLimitBytes ]; then
+            log_msg "Sufficient space cleared for the new backup."
             break
         fi
-        log_msg "Continuing disk cleanup..."
     done
 
-    # Check if enough space has been freed up; otherwise, exit the script
-    if [ "$freeSpace" -lt "$fileSize" ]; then
-        log_msg "Insufficient space even after deleting backup files. Backup failed."
+    # Check if we still exceed the limit
+    if [ $(($totalBackupSize + $fileSize)) -gt $backupsDiskLimitBytes ]; then
+        log_msg "Unable to free enough space for the new backup. Backup failed."
         exit 1
     fi
-    log_msg "Memory freed up successfully for the new backup."
 fi
 
 # Start upload of backup file to the designated folder
